@@ -9,7 +9,7 @@ import { util } from './util.module';
  *
  * @param provider {Provider}
  *
- * @description Token issuer can crate assets on MAP blockchain , update KYA (Know Your Asset) document.
+ * @description Token issuer can crate assets on MAP blockchain, update KYA (Know Your Asset) document.
  */
 export class AssetModule {
   private client: Client;

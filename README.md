@@ -9,13 +9,13 @@ Market Access Protocol (MAP) is Swarm’s investor compliance ecosystem, built a
 For use on Node.js backends, you can install the SDK by running the following NPM command:
 
 ```
-npm install swarm-sdk --save
+npm install swarm-map-sdk --save
 ```
 
 or if using yarn
 
 ```
-yarn add swarm-sdk
+yarn add swarm-map-sdk
 ```
 
 # Documentation
@@ -26,7 +26,7 @@ For using the SDK and Swarm Market Access Protocol API please consult the [MAP D
 
 Initialize SDK:
 ```js
-import {SwarmMapSDK, Provider } from 'swarm-sdk';
+import {SwarmMapSDK, Provider } from 'swarm-map-sdk';
 
 const provider = new Provider('staging', '<apiKey>');
 const swarm = new SwarmMapSDK(provider);
@@ -34,7 +34,7 @@ const swarm = new SwarmMapSDK(provider);
 
 Register Certificate Issuer:
 ```js
-import {SwarmMapSDK, Provider } from 'swarm-sdk';
+import {SwarmMapSDK, Provider } from 'swarm-map-sdk';
 
 const provider = new Provider('staging', '<apiKey>');
 const swarm = new SwarmMapSDK(provider);

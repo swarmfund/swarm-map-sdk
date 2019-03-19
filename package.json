@@ -1,5 +1,5 @@
 {
-  "name": "swarm-sdk",
+  "name": "swarm-map-sdk",
   "version": "0.0.2",
   "description": "Market Access Protocol (MAP) is Swarm’s investor compliance ecosystem, built and maintained by a decentralized network of nodes",
   "main": "lib/index.js",
@@ -17,13 +17,13 @@
   "author": "Djordje Stevanovic <djordje.stevanovic@mvpworkshop.co>",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/swarmfund/swarm-sdk.git",
+    "url": "https://github.com/swarmfund/swarm-map-sdk.git",
     "type": "git"
   },
   "bugs": {
-    "url": "https://github.com/swarmfund/swarm-sdk/issues"
+    "url": "https://github.com/swarmfund/swarm-map-sdk/issues"
   },
-  "homepage": "https://github.com/swarmfund/swarm-sdk/blob/master/README.md",
+  "homepage": "https://github.com/swarmfund/swarm-map-sdk/blob/master/README.md",
   "dependencies": {
     "axios": "^0.18.0",
     "elliptic": "^6.4.1",
