@@ -6,7 +6,7 @@
   "files": ["lib/**/*"],
   "scripts": {
     "build": "npm run build-ts && npm run tslint",
-    "build-ts": "tsc",
+    "build-ts": "rm -rf lib/ && tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm run tslint",

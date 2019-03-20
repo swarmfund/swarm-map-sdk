@@ -53,7 +53,7 @@ export class TokenIssuerModule {
    *
    * @return Promise<void>
    */
-  registerAssociator(privateKey: string | Buffer, issuer: string, asset: string, associator: string): Promise<void> {
+  registerAssociator(privateKey: string | Buffer, issuer: string, asset: string, associator: string): Promise<{}> {
     const token = util.getJwtToken(privateKey);
     return this.client.post(PATHS.ASSET_ASSOCIATOR(issuer, asset, associator), {}, {
       ...util.getAuthHeaders(token)

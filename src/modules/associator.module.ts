@@ -80,7 +80,7 @@ export class AssociatorModule {
    *
    * @return Promise<WalletRequest>
    */
-  updateRequest(privateKey: string | Buffer, publicKey: string, id: string, certificates: Certificate[]): Promise<WalletRequest> {
+  updateRequest(privateKey: string | Buffer, publicKey: string, id: string, certificates: Certificate[]): Promise<any> {
     const token = util.getJwtToken(privateKey);
     return this.client.put(PATHS.ASSOCIATOR_REQUEST(publicKey, id), {certificates}, {...util.getAuthHeaders(token)});
   }

@@ -2,6 +2,7 @@ import { Options } from '../utils/provider';
 import moment from 'moment';
 import { ec as EC } from 'elliptic';
 import CONF from '../utils/conf';
+import { Headers } from '../utils/client';
 
 // jsontokens lib doesn't have @types definition
 // @ts-ignore
@@ -25,7 +26,7 @@ export class UtilModule {
     return new jsontokens.TokenSigner('ES256K', privateKey).sign(payload);
   }
 
-  getAuthHeaders(token: string) {
+  getAuthHeaders(token: string): Headers {
     return {
       'x-map-signature': token,
       'x-map-key-type': 'secp256k1'

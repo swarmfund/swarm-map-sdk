@@ -24,7 +24,7 @@ export class InvestorModule {
    */
   createRequest(privateKey: string | Buffer, associator: string, request: string): Promise<WalletRequest> {
     const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.ASSOCIATOR_REQUESTS(associator), {request}, {
+    return this.client.post(PATHS.ASSOCIATOR_REQUESTS(associator), {request} as WalletRequest, {
       ...util.getAuthHeaders(token)
     });
   }
