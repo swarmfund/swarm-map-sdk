@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "Market Access Protocol (MAP) is Swarm’s investor compliance ecosystem, built and maintained by a decentralized network of nodes",
   "main": "lib/index.js",
-  "files": ["lib/**/*"],
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
     "build": "npm run build-ts && npm run tslint",
     "build-ts": "rm -rf lib/ && tsc",
@@ -26,6 +28,7 @@
   "homepage": "https://github.com/swarmfund/swarm-map-sdk/blob/master/README.md",
   "dependencies": {
     "axios": "^0.18.0",
+    "eccrypto": "^1.1.0",
     "elliptic": "^6.4.1",
     "jsontokens": "^1.0.0",
     "moment": "^2.24.0",

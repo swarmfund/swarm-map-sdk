@@ -1,6 +1,6 @@
 import { Provider } from '../utils/provider';
 import { Client } from '../utils/client';
-import { WalletRequest } from '../interfaces';
+import { WalletConnectionRequest } from '../interfaces';
 import { PATHS } from '../utils/const';
 import { util } from './util.module';
 
@@ -20,11 +20,11 @@ export class InvestorModule {
    * @param associator {string} - associator public key
    * @param request {string} - encrypted data with associator public key
    *
-   * @return Promise<WalletRequest>
+   * @return Promise<WalletConnectionRequest>
    */
-  createRequest(privateKey: string | Buffer, associator: string, request: string): Promise<WalletRequest> {
+  createRequest(privateKey: string | Buffer, associator: string, request: string): Promise<WalletConnectionRequest> {
     const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.ASSOCIATOR_REQUESTS(associator), {request} as WalletRequest, {
+    return this.client.post(PATHS.ASSOCIATOR_REQUESTS(associator), {request} as WalletConnectionRequest, {
       ...util.getAuthHeaders(token)
     });
   }

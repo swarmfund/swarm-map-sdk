@@ -1,6 +1,6 @@
 import { Client } from '../utils/client';
 import { Provider } from '../utils/provider';
-import { Associator, Certificate, WalletRequest } from '../interfaces';
+import { Associator, Certificate, WalletConnectionRequest } from '../interfaces';
 import { PATHS } from '../utils/const';
 import { util } from './util.module';
 
@@ -52,9 +52,9 @@ export class AssociatorModule {
    * @param publicKey {string} - associator public key
    * @param status {number} - request status
    *
-   * @return Promise<WalletRequest[]>
+   * @return Promise<WalletConnectionRequest[]>
    */
-  getRequests(publicKey: string, status: number): Promise<WalletRequest[]> {
+  getRequests(publicKey: string, status: number): Promise<WalletConnectionRequest[]> {
     return this.client.get(PATHS.ASSOCIATOR_REQUESTS(publicKey));
   }
 
@@ -64,9 +64,9 @@ export class AssociatorModule {
    * @param publicKey {string} - associator public key
    * @param id {string} - request id
    *
-   * @return Promise<WalletRequest>
+   * @return Promise<WalletConnectionRequest>
    */
-  getRequest(publicKey: string, id: string): Promise<WalletRequest> {
+  getRequest(publicKey: string, id: string): Promise<WalletConnectionRequest> {
     return this.client.get(PATHS.ASSOCIATOR_REQUEST(publicKey, id));
   }
 
@@ -78,7 +78,7 @@ export class AssociatorModule {
    * @param id {string} - request id
    * @param certificates {Certificate[]} - array of certificates
    *
-   * @return Promise<WalletRequest>
+   * @return Promise<WalletConnectionRequest>
    */
   updateRequest(privateKey: string | Buffer, publicKey: string, id: string, certificates: Certificate[]): Promise<any> {
     const token = util.getJwtToken(privateKey);
