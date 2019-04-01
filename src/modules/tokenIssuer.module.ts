@@ -1,7 +1,7 @@
 import { PATHS } from '../utils/const';
 import { Client } from '../utils/client';
 import { Provider } from '../utils/provider';
-import { TokenIssuer } from '../interfaces';
+import { AssociatorConnection, TokenIssuer } from '../interfaces';
 import { util } from './util.module';
 
 /**
@@ -23,13 +23,16 @@ export class TokenIssuerModule {
   /**
    * @name create
    * @description Registers the token issuer.
+   * @param privateKey {string}
    * @param tokenIssuer {TokenIssuer}
    *
    * @return Promise<TokenIssuer>
    */
-  create(tokenIssuer: TokenIssuer): Promise<TokenIssuer> {
+  create(privateKey: string, tokenIssuer: TokenIssuer): Promise<TokenIssuer> {
     const {name, publicKey} = tokenIssuer;
-    return this.client.post(PATHS.TOKEN_ISSUERS, {name, publicKey});
+    const token = util.getJwtToken(privateKey);
+
+    return this.client.post(PATHS.TOKEN_ISSUERS, {name, publicKey}, {...util.getAuthHeaders(token)});
   }
 
   /**
@@ -47,15 +50,17 @@ export class TokenIssuerModule {
    * @name registerAssociator
    * @description Register associator that can issue certificate for asset wallets.
    * @param privateKey {string | Buffer} - token issuer private key
-   * @param issuer {string} - token issuer public key
-   * @param asset {string} - asset unique id on MAP blockchain.
-   * @param associator {string} - associator public key
+   * @param assetUid {string} - asset unique id on MAP blockchain.
+   * @param associatorId {string} - associator MAP id
    *
    * @return Promise<void>
    */
-  registerAssociator(privateKey: string | Buffer, issuer: string, asset: string, associator: string): Promise<{}> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.ASSET_ASSOCIATOR(issuer, asset, associator), {}, {
+  registerAssociator(privateKey: string, assetUid: string, associatorId: string): Promise<AssociatorConnection> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+    const connection = {} as AssociatorConnection;
+
+    return this.client.post(PATHS.ASSET_ASSOCIATOR(id, assetUid, associatorId), connection, {
       ...util.getAuthHeaders(token)
     });
   }
@@ -64,15 +69,16 @@ export class TokenIssuerModule {
    * @name unregisterAssociator
    * @description Unregistering associator for asset.
    * @param privateKey {string} - token issuer private key
-   * @param issuer {string} - token issuer public key
-   * @param asset {string} - asset unique id on MAP blockchain.
-   * @param associator {string} - associator public key
+   * @param assetUid {string} - asset unique id on MAP blockchain.
+   * @param associatorId {string} - associator MAP id
    *
    * @return Promise<void>
    */
-  unregisterAssociator(privateKey: string | Buffer, issuer: string, asset: string, associator: string): Promise<void> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.delete(PATHS.ASSET_ASSOCIATOR(issuer, asset, associator), {
+  unregisterAssociator(privateKey: string, assetUid: string, associatorId: string): Promise<void> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.delete(PATHS.ASSET_ASSOCIATOR(id, assetUid, associatorId), {
       ...util.getAuthHeaders(token)
     });
   }

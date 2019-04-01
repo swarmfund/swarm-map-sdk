@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { Provider } from './provider';
 import CONF from './conf';
 
@@ -17,15 +17,24 @@ export class Client {
     this.apiKey = CONF.apiKey;
   }
 
-  private dispatchAxiosRequest<T>(method: string, path: string, headers?: Headers, payload?: T) {
+  private dispatchAxiosRequest<T>(method: string, path: string, headers?: Headers, payload?: T, params?: any) {
     headers = {...headers, 'x-map-api-key': this.apiKey};
 
-    return axios({
+    const config: AxiosRequestConfig = {
       method: method,
       url: this.baseUrl + path,
       headers: headers,
-      data: payload,
-    }).then((response) => {
+    };
+
+    if (payload) {
+      config.data = payload;
+    }
+
+    if (params) {
+      config.params = params;
+    }
+
+    return axios(config).then((response) => {
       return Promise.resolve(response.data);
     })
       .catch((error) => {
@@ -37,8 +46,8 @@ export class Client {
     return this.dispatchAxiosRequest('POST', path, headers, payload);
   }
 
-  get<T>(path: string, headers?: Headers): Promise<T> {
-    return this.dispatchAxiosRequest('GET', path, headers);
+  get<T>(path: string, headers?: Headers, params?: any): Promise<T> {
+    return this.dispatchAxiosRequest('GET', path, headers, undefined, params);
   }
 
   put<T>(path: string, payload: T, headers?: Headers): Promise<T> {

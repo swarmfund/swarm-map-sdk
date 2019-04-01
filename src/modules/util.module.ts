@@ -3,12 +3,16 @@ import moment from 'moment';
 import { ec as EC } from 'elliptic';
 import eccrypto, { Ecies } from 'eccrypto';
 import crypto from 'crypto';
-import jsontokens from 'jsontokens';
-import Signature = EC.Signature;
 
 import CONF from '../utils/conf';
 import { Headers } from '../utils/client';
 import { Request } from '../interfaces';
+import Signature = EC.Signature;
+import RIPEMD160 from 'ripemd160';
+import bech32 from 'bech32';
+
+// @ts-ignore
+const jsontokens = require('jsontokens');
 
 export class UtilModule {
   options: Options = CONF;
@@ -16,6 +20,7 @@ export class UtilModule {
   /**
    * @name getAuthHeaders
    * @param privateKey {string | Buffer}
+   * @param address {string} - MAP api unique address
    *
    * @return string - token is separated by `.` second part of string
    * represent payload as message and third one is signature
@@ -23,19 +28,86 @@ export class UtilModule {
    * structure: [header {alg: string (default: ES256K), typ: string (default: JWT)}].[payload].[signature]
    * example: eyJ0eXAiOiJOiJFUzI1NksifQ.eyJpc3MiOiIwNNTExMTQ4fQ.3xuaiZoRpuIjKOqLhsSnoc1w
    */
-  getJwtToken(privateKey: string | Buffer): string {
+  getJwtToken(privateKey: string | Buffer, address?: string): string {
     const {authExpirationTime, authExpirationTimeUnit} = this.options;
     const ec = new EC('secp256k1');
 
     const keyPair = ec.keyFromPrivate(privateKey, 'hex');
     const publicKey: string = keyPair.getPublic('hex');
 
-    const payload = {
-      iss: publicKey,
-      exp: moment().add(authExpirationTime, authExpirationTimeUnit).unix()
-    };
+    const payload: {iss?: string, publicKey?: string, exp?: number} = {};
+    if (address) {
+      payload.iss = address;
+    } else {
+      payload.publicKey = publicKey;
+    }
+
+    payload.exp = moment().add(authExpirationTime, authExpirationTimeUnit).unix();
 
     return new jsontokens.TokenSigner('ES256K', privateKey).sign(payload);
+  }
+
+  /**
+   * @name recoverPublicKey
+   * @param privateKey {string}
+   *
+   * @return publicKey {string}
+   */
+  recoverPublicKey(privateKey: string) {
+    const ec = new EC('secp256k1');
+    const keyPair = ec.keyFromPrivate(privateKey, 'hex');
+    return keyPair.getPublic('hex');
+  }
+
+  /**
+   * @name getAddress
+   * @param publicKey {Buffer}
+   *
+   * @return {Buffer}
+   */
+  getAddress(publicKey: Buffer): Buffer {
+    const ec = new EC('secp256k1');
+    let buffer;
+
+    if (publicKey.length == 33) {
+      buffer = publicKey;
+    } else if (publicKey.length == 65) {
+      buffer = Buffer.from(ec.keyFromPublic(publicKey).getPublic(true, 'hex'), 'hex');
+    } else {
+      throw new Error('Wrong public key size');
+    }
+
+    const s = crypto.createHash('sha256').update(buffer).digest();
+    return new RIPEMD160().update(s).digest();
+  }
+
+  /**
+   * @name encodeMapId
+   * @param privateKey {string}
+   * @param hrp {string} - default is 'map'
+   *
+   * @return MapId {string}
+   */
+  encodeMapId(privateKey: string, hrp: string = 'map'): string {
+    const publicKey = this.recoverPublicKey(privateKey);
+    const address = this.getAddress(Buffer.from(publicKey, 'hex'));
+
+    return bech32.encode(hrp, bech32.toWords(address));
+  }
+
+  /**
+   * @name generateKeyPair
+   *
+   * @return Object {privateKey: string, publicKey: string}
+   */
+  generateKeyPair(): { privateKey: string, publicKey: string } {
+    const ec = new EC('secp256k1');
+    const keys = ec.genKeyPair();
+
+    const publicKey = keys.getPublic('hex');
+    const privateKey = keys.getPrivate('hex') as string;
+
+    return {publicKey, privateKey};
   }
 
   /**

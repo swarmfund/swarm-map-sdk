@@ -1,6 +1,6 @@
 import { Client } from '../utils/client';
 import { Provider } from '../utils/provider';
-import { Certificate } from '../interfaces';
+import { Certificate, FindCertificate } from '../interfaces';
 import { PATHS } from '../utils/const';
 import { util } from './util.module';
 
@@ -24,14 +24,16 @@ export class CertificateModule {
   /**
    * @name create
    * @description Register certificates available from a certificate issuer on MAP.
-   * @param privateKey {string | Buffer} - certificate issuer private key
+   * @param privateKey {string} - certificate issuer private key
    * @param certificate {Certificate} - certificate Object
    *
    * @return Promise<Certificate>
    */
-  create(privateKey: string | Buffer, certificate: Certificate): Promise<Certificate> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.CERTIFICATES(certificate.issuer), certificate, {...util.getAuthHeaders(token)});
+  create(privateKey: string, certificate: Certificate): Promise<Certificate> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.post(PATHS.CERTIFICATES(id), certificate, {...util.getAuthHeaders(token)});
   }
 
   /**
@@ -45,5 +47,16 @@ export class CertificateModule {
     return this.client.get(PATHS.CERTIFICATE(id));
   }
 
+  /**
+   * @name find
+   * @description search for certificates
+   *
+   * @param criteria {FindCertificate}
+   *
+   * @return Promise<Certificate[]>
+   */
+  find(criteria: FindCertificate): Promise<Certificate[]> {
+    return this.client.get(PATHS.FIND_CERTIFICATE, undefined, criteria);
+  }
 }
 

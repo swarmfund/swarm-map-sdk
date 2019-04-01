@@ -26,10 +26,12 @@ export class CertificateTypeModule {
    *
    * @return Promise<CertificateType>
    */
-  create(privateKey: string | Buffer, type: CertificateType): Promise<CertificateType> {
-    const {issuer, description} = type;
-    const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.CERTIFICATE_TYPES(issuer), {issuer, description, publicKey: issuer}, {
+  create(privateKey: string, type: CertificateType): Promise<CertificateType> {
+    const {description} = type;
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.post(PATHS.CERTIFICATE_TYPES(id), {description}, {
       ...util.getAuthHeaders(token)
     });
   }
@@ -48,12 +50,12 @@ export class CertificateTypeModule {
   /**
    * @name list
    * @description List certificate available from a certificate issuer.
-   * @param issuer {string} - certificate issuer public key
+   * @param issuerId {string} - certificate issuer public key
    *
    * @return Promise<CertificateType[]>
    */
-  list(issuer: string): Promise<CertificateType[]> {
-    return this.client.get(PATHS.CERTIFICATE_TYPES(issuer));
+  list(issuerId: string): Promise<CertificateType[]> {
+    return this.client.get(PATHS.CERTIFICATE_TYPES(issuerId));
   }
 
   /**
@@ -62,13 +64,15 @@ export class CertificateTypeModule {
    * but issued certificates of this type remain valid until specific expiration.
    *
    * @param privateKey {string | Buffer} - certificate issuer private key
-   * @param publicKey {string} - certificate issuer public key
-   * @param id {string} - certificate type unique id
+   * @param privateKey {string} - certificate issuer private key
+   * @param uid {string} - certificate type unique id
    *
    * @return Promise<void>
    */
-  remove(privateKey: string | Buffer, publicKey: string, id: string): Promise<void> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.delete(PATHS.DELETE_CERTIFICATE_TYPE(publicKey, id), {...util.getAuthHeaders(token)});
+  remove(privateKey: string, uid: string): Promise<void> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.delete(PATHS.DELETE_CERTIFICATE_TYPE(id, uid), {...util.getAuthHeaders(token)});
   }
 }
