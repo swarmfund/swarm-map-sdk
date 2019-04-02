@@ -42,6 +42,8 @@ export class Provider {
       this.baseUrl = '...';
     } else if (environment === 'staging') {
       this.baseUrl = 'https://staging.swarm-map.mvpworkshop.co/api';
+    } else if (environment === 'sandbox') {
+      this.baseUrl = 'https://sandbox.swarm.fund/api';
     } else {
       let port: number = 3000;
 
