@@ -2,7 +2,7 @@ import { Provider } from '../src/utils/provider';
 import { SwarmMapSDK } from '../src/core';
 import { Request } from '../src/interfaces';
 
-const provider = new Provider('localhost', 'apikey');
+const provider = new Provider('sandbox', '<x-map-api-key>');
 const swarm = new SwarmMapSDK(provider);
 
 // INVESTOR KEY PAIR
