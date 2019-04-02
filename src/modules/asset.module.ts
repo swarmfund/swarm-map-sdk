@@ -29,34 +29,38 @@ export class AssetModule {
    * @return Promise<Asset>
    */
   create(privateKey: string, asset: Asset): Promise<Asset> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.ASSETS(asset.issuer), asset, {...util.getAuthHeaders(token)});
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.post(PATHS.ASSETS(id), asset, {...util.getAuthHeaders(token)});
   }
 
   /**
    * @name get
    * @description Get asset by id.
-   * @param issuer {string} - token issuer public key
-   * @param id {string} - asset unique id on MAP blockchain
+   * @param issuer {string} - token issuer MAP id
+   * @param uid {string} - asset unique id on MAP blockchain
    *
    * @return Promise<Asset>
    */
-  get(issuer: string, id: string): Promise<Asset> {
-    return this.client.get(PATHS.ASSET(issuer, id));
+  get(issuer: string, uid: string): Promise<Asset> {
+    return this.client.get(PATHS.ASSET(issuer, uid));
   }
 
   /**
    * @name updateKya
    * @description Update KYA document.
+   *
    * @param privateKey {string} - token issuer private key
-   * @param issuer {string} - token issuer public key
-   * @param id {string} - asset unique id on MAP blockchain
+   * @param uid {string} - token issuer public key
    * @param kya {Kya} - document should provide url and hash (IPFS) of document
    *
    * @return Promise<Kya>
    */
-  updateKya(privateKey: string, issuer: string, id: string, kya: Kya): Promise<Kya> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.put(PATHS.KYA(issuer, id), kya, {...util.getAuthHeaders(token)});
+  updateKya(privateKey: string, uid: string, kya: Kya): Promise<Kya> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.put(PATHS.KYA(id, uid), kya, {...util.getAuthHeaders(token)});
   }
 }

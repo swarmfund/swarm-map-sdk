@@ -5,3 +5,10 @@ export interface Certificate {
   subject: string;
   type: string;
 }
+
+export interface FindCertificate {
+  uid?: string;
+  issuer?: string;
+  subject?: string;
+  type?: string;
+}

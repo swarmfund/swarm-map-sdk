@@ -2,6 +2,7 @@ import { CertificateIssuer } from '../interfaces';
 import { PATHS } from '../utils/const';
 import { Client } from '../utils/client';
 import { Provider } from '../utils/provider';
+import { util } from './util.module';
 
 /**
  * @name CertificateIssuerModule
@@ -26,19 +27,21 @@ export class CertificateIssuerModule {
    * @name create
    * @description Registers a new certificate issuer.
    * @param issuer {CertificateIssuer}
+   * @param privateKey {string}
    * @return Promise<CertificateIssuer>
    */
-  create(issuer: CertificateIssuer): Promise<CertificateIssuer> {
-    return this.client.post(PATHS.CERTIFICATE_ISSUER, issuer);
+  create(issuer: CertificateIssuer, privateKey: string): Promise<CertificateIssuer> {
+    const token = util.getJwtToken(privateKey);
+    return this.client.post(PATHS.CERTIFICATE_ISSUER, issuer, {...util.getAuthHeaders(token)});
   }
 
   /**
    * @name get
    * @description Retrieve certificate issuer object.
-   * @param publicKey {string} - The public key of Certificate Issuer
+   * @param id {string} - The MAP api address of Certificate Issuer
    * @return Promise<CertificateIssuer>
    */
-  get(publicKey: string): Promise<CertificateIssuer> {
-    return this.client.get(PATHS.CERTIFICATE_ISSUER + `/${publicKey}`);
+  get(id: string): Promise<CertificateIssuer> {
+    return this.client.get(PATHS.CERTIFICATE_ISSUER + `/${id}`);
   }
 }

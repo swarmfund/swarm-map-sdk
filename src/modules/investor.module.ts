@@ -1,6 +1,6 @@
 import { Provider } from '../utils/provider';
 import { Client } from '../utils/client';
-import { WalletRequest } from '../interfaces';
+import { WalletConnectionRequest } from '../interfaces';
 import { PATHS } from '../utils/const';
 import { util } from './util.module';
 
@@ -17,14 +17,14 @@ export class InvestorModule {
    * for reissuing certificates to investor wallet.
    *
    * @param privateKey {string | Buffer} - investor private key
-   * @param associator {string} - associator public key
+   * @param associatorId {string} - associator MAP id
    * @param request {string} - encrypted data with associator public key
    *
-   * @return Promise<WalletRequest>
+   * @return Promise<WalletConnectionRequest>
    */
-  createRequest(privateKey: string | Buffer, associator: string, request: string): Promise<WalletRequest> {
+  createRequest(privateKey: string, associatorId: string, request: string): Promise<WalletConnectionRequest> {
     const token = util.getJwtToken(privateKey);
-    return this.client.post(PATHS.ASSOCIATOR_REQUESTS(associator), {request}, {
+    return this.client.post(PATHS.ASSOCIATOR_REQUESTS(associatorId), {request} as WalletConnectionRequest, {
       ...util.getAuthHeaders(token)
     });
   }

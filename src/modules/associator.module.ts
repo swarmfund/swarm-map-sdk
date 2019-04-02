@@ -1,6 +1,6 @@
 import { Client } from '../utils/client';
 import { Provider } from '../utils/provider';
-import { Associator, Certificate, WalletRequest } from '../interfaces';
+import { Associator, Certificate, WalletConnectionRequest } from '../interfaces';
 import { PATHS } from '../utils/const';
 import { util } from './util.module';
 
@@ -26,13 +26,16 @@ export class AssociatorModule {
   /**
    * @name create
    * @description register new associator for asset.
+   * @param privateKey {string} - associator private key
    * @param associator {Associator}
    *
    * @return Promise<Associator>
    */
-  create(associator: Associator): Promise<Associator> {
+  create(privateKey: string, associator: Associator): Promise<Associator> {
     const {name, publicKey} = associator;
-    return this.client.post(PATHS.ASSOCIATORS, {name, publicKey});
+    const token = util.getJwtToken(privateKey);
+
+    return this.client.post(PATHS.ASSOCIATORS, {name, publicKey}, {...util.getAuthHeaders(token)});
   }
 
   /**
@@ -49,39 +52,57 @@ export class AssociatorModule {
   /**
    * @name getRequests
    * @description get all associator requests.
-   * @param publicKey {string} - associator public key
-   * @param status {number} - request status
+   * @param id {string} - associator public key
+   * @param status {string} - request status
    *
-   * @return Promise<WalletRequest[]>
+   * @return Promise<WalletConnectionRequest[]>
    */
-  getRequests(publicKey: string, status: number): Promise<WalletRequest[]> {
-    return this.client.get(PATHS.ASSOCIATOR_REQUESTS(publicKey));
+  getRequests(id: string, status: string): Promise<WalletConnectionRequest[]> {
+    return this.client.get(PATHS.ASSOCIATOR_REQUESTS(id), undefined, {status});
   }
 
   /**
    * @name getRequest
    * @description get request by id.
-   * @param publicKey {string} - associator public key
-   * @param id {string} - request id
+   * @param id {string} - associator MAP id
+   * @param requestUid {string} - request unique id
    *
-   * @return Promise<WalletRequest>
+   * @return Promise<WalletConnectionRequest>
    */
-  getRequest(publicKey: string, id: string): Promise<WalletRequest> {
-    return this.client.get(PATHS.ASSOCIATOR_REQUEST(publicKey, id));
+  getRequest(id: string, requestUid: string): Promise<WalletConnectionRequest> {
+    return this.client.get(PATHS.ASSOCIATOR_REQUEST(id, requestUid));
   }
 
   /**
    * @name updateRequest
    * @description update request
-   * @param privateKey {string | Buffer} - associator private key
-   * @param publicKey {string} - associator public key
-   * @param id {string} - request id
+   *
+   * @param privateKey {string} - associator MAP id
+   * @param requestUid {string} - request unique id
+   * @param status {string}
+   *
+   * @return Promise<WalletConnectionRequest>
+   */
+  updateRequest(privateKey: string, requestUid: string, status: string): Promise<any> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.put(PATHS.ASSOCIATOR_REQUEST(id, requestUid), {status}, {...util.getAuthHeaders(token)});
+  }
+
+  /**
+   * @name issueCertificates
+   * @description reissue certificates
+   *
+   * @param privateKey {string} - associator private key
    * @param certificates {Certificate[]} - array of certificates
    *
-   * @return Promise<WalletRequest>
+   * @return Promise<Certificates[]>
    */
-  updateRequest(privateKey: string | Buffer, publicKey: string, id: string, certificates: Certificate[]): Promise<WalletRequest> {
-    const token = util.getJwtToken(privateKey);
-    return this.client.put(PATHS.ASSOCIATOR_REQUEST(publicKey, id), {certificates}, {...util.getAuthHeaders(token)});
+  issueCertificates(privateKey: string, certificates: Certificate[]): Promise<any> {
+    const id = util.encodeMapId(privateKey);
+    const token = util.getJwtToken(privateKey, id);
+
+    return this.client.post(PATHS.ASSOCIATOR_CERTIFICATES(id), {certificates}, {...util.getAuthHeaders(token)});
   }
 }

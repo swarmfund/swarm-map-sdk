@@ -1,5 +1,5 @@
 export interface CertificateIssuer {
-  uid?: string;
+  id?: string;
   name: string;
   publicKey: string;
 }
