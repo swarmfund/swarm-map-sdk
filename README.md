@@ -20,7 +20,7 @@ yarn add swarm-map-sdk
 
 # Documentation
 
-For using the SDK and Swarm Market Access Protocol API please consult the [MAP Developer Docs](http://google.com).
+For using the SDK and Swarm Market Access Protocol API please consult the [MAP Developer Docs](https://marketaccessprotocol.docs.apiary.io/#) and [examples](https://github.com/swarmfund/swarm-map-sdk/tree/master/examples).
 
 # Usages
 
