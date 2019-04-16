@@ -38,7 +38,11 @@ export class Client {
       return Promise.resolve(response.data);
     })
       .catch((error) => {
-        return Promise.reject(error.response.data);
+        if (error.response && error.response.data) {
+          return Promise.reject(error.response.data);
+        } else {
+          return Promise.reject(error);
+        }
       });
   }
 
