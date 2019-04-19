@@ -22,6 +22,8 @@ yarn add swarm-map-sdk
 
 For using the SDK and Swarm Market Access Protocol API please consult the [MAP Developer Docs](https://marketaccessprotocol.docs.apiary.io/#) and [examples](https://github.com/swarmfund/swarm-map-sdk/tree/master/examples).
 
+Request an API key by emailing developers@swarm.fund
+
 # Usages
 
 Initialize SDK:
