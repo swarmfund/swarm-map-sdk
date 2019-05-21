@@ -39,7 +39,7 @@ export class Provider {
     }
 
     if (environment === 'production') {
-      throw Error('Production environment is not implemented.');
+      this.baseUrl = 'https://map.swarm.fund/api';
     } else if (environment === 'staging') {
       this.baseUrl = 'https://staging.swarm-map.mvpworkshop.co/api';
     } else if (environment === 'sandbox') {
