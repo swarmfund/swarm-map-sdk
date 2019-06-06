@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, Method } from 'axios';
 import { Provider } from './provider';
 import CONF from './conf';
 
@@ -17,7 +17,7 @@ export class Client {
     this.apiKey = CONF.apiKey;
   }
 
-  private dispatchAxiosRequest<T>(method: string, path: string, headers?: Headers, payload?: T, params?: any) {
+  private dispatchAxiosRequest<T>(method: Method, path: string, headers?: Headers, payload?: T, params?: any) {
     headers = {...headers, 'x-map-api-key': this.apiKey};
 
     const config: AxiosRequestConfig = {
