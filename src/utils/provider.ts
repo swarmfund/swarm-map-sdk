@@ -15,7 +15,7 @@ export class Provider {
 
   constructor(environment: ENVIRONMENT | string, apiKey: string, options?: Options) {
     if (!environment) {
-      throw new Error('Please provider environment property. Could be production, staging or localhost.');
+      throw new Error('Please provider environment property. Could be production, sandbox or localhost.');
     }
 
     this.environment = environment;
@@ -40,8 +40,6 @@ export class Provider {
 
     if (environment === 'production') {
       this.baseUrl = 'https://map.swarm.fund/api';
-    } else if (environment === 'staging') {
-      this.baseUrl = 'https://staging.swarm-map.mvpworkshop.co/api';
     } else if (environment === 'sandbox') {
       this.baseUrl = 'https://sandbox.swarm.fund/api';
     } else {
