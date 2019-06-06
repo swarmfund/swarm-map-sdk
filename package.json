@@ -1,6 +1,6 @@
 {
   "name": "@swarmfund/swarm-map-sdk",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Market Access Protocol (MAP) is Swarm’s investor compliance ecosystem, built and maintained by a decentralized network of nodes",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
