@@ -72,7 +72,8 @@ export class UtilModule {
     if (publicKey.length == 33) {
       buffer = publicKey;
     } else if (publicKey.length == 65) {
-      buffer = Buffer.from(ec.keyFromPublic(publicKey).getPublic(true, 'hex'), 'hex');
+      const hexPublicKey = ec.keyFromPublic(publicKey as Buffer).getPublic(true, 'hex');
+      buffer = Buffer.from(hexPublicKey as string, 'hex');
     } else {
       throw new Error('Wrong public key size');
     }
