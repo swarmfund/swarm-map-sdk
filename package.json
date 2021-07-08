@@ -12,7 +12,6 @@
     "build-ts": "rm -rf lib/ && tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "prepare": "npm run build",
-    "postinstall": "npm run build",
     "prepublishOnly": "npm run tslint",
     "preversion": "npm run tslint",
     "version": "git add -A src",
