@@ -2,8 +2,8 @@
   "name": "@swarmfund/swarm-map-sdk",
   "version": "0.2.5",
   "description": "Market Access Protocol (MAP) is Swarm’s investor compliance ecosystem, built and maintained by a decentralized network of nodes",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/index",
+  "typings": "lib/index",
   "files": [
     "lib/**/*"
   ],
@@ -11,7 +11,7 @@
     "build": "npm run build-ts && npm run tslint",
     "build-ts": "rm -rf lib/ && tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "prepare": "npm run build",
+    "prepare": "npm run build-ts",
     "prepublishOnly": "npm run tslint",
     "preversion": "npm run tslint",
     "version": "git add -A src",
@@ -19,14 +19,14 @@
   },
   "author": "Djordje Stevanovic <djordje.stevanovic@mvpworkshop.co>",
   "license": "MIT",
-  "repository": {
-    "url": "https://github.com/swarmfund/swarm-map-sdk.git",
-    "type": "git"
+  "devDependencies": {
+    "@types/bech32": "1.1.1",
+    "@types/elliptic": "6.4.8",
+    "@types/ripemd160": "2.0.0",
+    "tsify": "4.0.1",
+    "tslint": "5.16.0",
+    "typescript": "3.5.1"
   },
-  "bugs": {
-    "url": "https://github.com/swarmfund/swarm-map-sdk/issues"
-  },
-  "homepage": "https://github.com/swarmfund/swarm-map-sdk/blob/master/README.md",
   "dependencies": {
     "axios": "0.19.0",
     "bech32": "1.1.3",
@@ -36,13 +36,5 @@
     "moment": "2.24.0",
     "querystring": "0.2.0",
     "ripemd160": "2.0.2"
-  },
-  "devDependencies": {
-    "@types/bech32": "1.1.1",
-    "@types/elliptic": "6.4.8",
-    "@types/ripemd160": "2.0.0",
-    "tsify": "4.0.1",
-    "tslint": "5.16.0",
-    "typescript": "3.5.1"
   }
 }
