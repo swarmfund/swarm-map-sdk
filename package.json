@@ -33,7 +33,7 @@
     "eccrypto": "1.1.1",
     "elliptic": "6.4.1",
     "jsontokens": "1.0.0",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "querystring": "0.2.0",
     "ripemd160": "2.0.2"
   }
